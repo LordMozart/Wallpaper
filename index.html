@@ -25,6 +25,12 @@
             height: 100%;
             width: 100%;
         }
+        #txt {
+            position: absolute;
+            top: 40%; /* Adjust this value to position the clock higher or lower */
+            left: 50%;
+            transform: translateX(-50%);
+        }
         #countdown {
             position: absolute;
             bottom: 10%; /* Adjust this value to position the countdown higher or lower */
@@ -92,15 +98,4 @@
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            document.getElementById('countdown').innerHTML = 
-                `${days}d ${hours}h ${minutes}m ${seconds}s`;
-
-            setTimeout(updateCountdown, 1000);
-        }
-
-        updateCountdown();
-    </script>
-</body>
-</html>
+            const seconds = Math.floor((distance % 
