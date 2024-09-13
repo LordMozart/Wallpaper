@@ -4,10 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Countdown Timer</title>
-
+    <link rel="icon" type="image/x-icon" href="https://images.sftcdn.net/images/t_app-icon-m/p/459ac38a-96d0-11e6-b687-00163ed833e7/1317321988/internet-explorer-7-logo.png">
     <link rel="stylesheet" href="style.css" />
     <script src="script.js" defer></script>
-
     <style>
         body {
             display: flex;
@@ -16,185 +15,95 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            color: white;
-            background-color: black;
-            font-size: 2em;
-            overflow: hidden;
+            color: white; /* Set all text to white */
+            background-color: black; /* Optional: Set background to black for better contrast */
+            font-size: 2em; /* Enlarge text */
+            overflow: hidden; /* Prevent scrollbars */
         }
-
         .container {
             text-align: center;
             position: relative;
             height: 100%;
             width: 100%;
-            z-index: 1;
+            z-index: 1; /* Ensure content is above particles */
         }
-
         #txt {
             position: absolute;
-            bottom: 20%;
+            bottom: 20%; /* Adjust this value to position the clock higher or lower */
             left: 50%;
             transform: translateX(-50%);
         }
-
         #countdown {
             position: absolute;
-            bottom: 10%;
+            bottom: 10%; /* Adjust this value to position the countdown higher or lower */
             left: 50%;
             transform: translateX(-50%);
         }
-
         #particles-js {
             position: absolute;
             width: 100%;
             height: 100%;
-            background: url('background.jpg') no-repeat center center fixed;
+            background: url('your-background-image.jpg') no-repeat center center fixed; /* Keep original background image */
             background-size: cover;
-            z-index: 0;
+            z-index: 0; /* Ensure particles are behind other elements */
         }
-
         .particle {
             position: absolute;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            filter: blur(8px);
+            background: rgba(255, 255, 255, 0.5);
+            filter: blur(4px);
+            animation: float 10s infinite;
+        }
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+            100% {
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
 <body>
-    <div id="particles-js"></div>
+    <div id="particles-js"></div> <!-- Added particle effect container -->
     <div class="container">
         <p id="greeting"></p>
         <h2>Jake :)</h2>
         <p id="txt"></p>
-        <p id="countdown"></p>
+        <p id="countdown"></p> <!-- Added countdown element -->
     </div>
 
     <script>
-        const particles = [];
-        const particleCount = 50;
-        const influenceRadius = 150;
-        const randomMovementDelay = 500;  // Delay for random movement in milliseconds
-        const randomMovementVelocity = 0.2; // Velocity for random movement
-
+        // Particle Effect Script
         function createParticles() {
             const particlesContainer = document.getElementById('particles-js');
+            const numberOfParticles = 50; // Adjust the number of particles
 
-            for (let i = 0; i < particleCount; i++) {
+            for (let i = 0; i < numberOfParticles; i++) {
                 const particle = document.createElement('div');
                 particle.classList.add('particle');
-                particle.style.width = `${Math.random() * 40 + 20}px`;
+                particle.style.width = `${Math.random() * 20 + 10}px`;
                 particle.style.height = particle.style.width;
                 particle.style.top = `${Math.random() * 100}%`;
                 particle.style.left = `${Math.random() * 100}%`;
-
-                // Random initial direction within the angle range
-                const angle = Math.random() * (160 - 20) + 20;
-                const radians = angle * (Math.PI / 180);
-                const velocity = 0.5 + Math.random() * 0.5;  // Slight velocity
-
-                particles.push({
-                    element: particle,
-                    velocityX: Math.cos(radians) * velocity,
-                    velocityY: Math.sin(radians) * velocity,
-                    x: parseFloat(particle.style.left),
-                    y: parseFloat(particle.style.top),
-                    angle: angle,
-                    randomMovement: true // Flag to track if the particle should move randomly
-                });
-
+                particle.style.animationDuration = `${Math.random() * 5 + 5}s`;
                 particlesContainer.appendChild(particle);
             }
-
-            // Start random movement with delay
-            setTimeout(() => {
-                particles.forEach(particle => {
-                    if (particle.randomMovement) {
-                        particle.velocityX += randomMovementVelocity * (Math.random() - 0.5);
-                        particle.velocityY += randomMovementVelocity * (Math.random() - 0.5);
-                    }
-                });
-            }, randomMovementDelay);
         }
 
         createParticles();
-
-        let lastMouseX = 0, lastMouseY = 0, lastTime = 0;
-
-        document.addEventListener('mousemove', (e) => {
-            const mouseX = e.clientX;
-            const mouseY = e.clientY;
-            const currentTime = Date.now();
-
-            const deltaX = mouseX - lastMouseX;
-            const deltaY = mouseY - lastMouseY;
-            const timeDiff = currentTime - lastTime || 1;
-
-            const velocityX = deltaX / timeDiff;
-            const velocityY = deltaY / timeDiff;
-
-            particles.forEach(particle => {
-                const particleX = particle.element.offsetLeft + (parseFloat(particle.element.style.width) / 2);
-                const particleY = particle.element.offsetTop + (parseFloat(particle.element.style.height) / 2);
-
-                const distance = Math.sqrt(Math.pow(mouseX - particleX, 2) + Math.pow(mouseY - particleY, 2));
-
-                if (distance < influenceRadius) {
-                    // Update velocity in the direction of the mouse movement
-                    const angleToMouse = Math.atan2(mouseY - particleY, mouseX - particleX);
-                    particle.velocityX += Math.cos(angleToMouse) * velocityX * 0.1;
-                    particle.velocityY += Math.sin(angleToMouse) * velocityY * 0.1;
-                    particle.randomMovement = false; // Disable random movement when affected by mouse
-                } else {
-                    particle.randomMovement = true; // Enable random movement when not affected by mouse
-                }
-            });
-
-            lastMouseX = mouseX;
-            lastMouseY = mouseY;
-            lastTime = currentTime;
-        });
-
-        function updateParticles() {
-            particles.forEach(particle => {
-                const currentLeft = parseFloat(particle.element.style.left);
-                const currentTop = parseFloat(particle.element.style.top);
-
-                // Update position based on velocity
-                const newLeft = currentLeft + particle.velocityX;
-                const newTop = currentTop + particle.velocityY;
-
-                // Update position and apply wrapping if particles go off-screen
-                particle.element.style.left = `${(newLeft + 100) % 100}%`;
-                particle.element.style.top = `${(newTop + 100) % 100}%`;
-
-                // Apply friction to slow down velocity over time
-                particle.velocityX *= 0.98;
-                particle.velocityY *= 0.98;
-
-                // Apply random movement if not affected by the mouse
-                if (particle.randomMovement) {
-                    const randomAngle = Math.random() * (160 - 20) + 20;
-                    const randomRadians = randomAngle * (Math.PI / 180);
-                    const randomVelocity = 0.2 + Math.random() * 0.2;
-                    particle.velocityX += Math.cos(randomRadians) * randomVelocity;
-                    particle.velocityY += Math.sin(randomRadians) * randomVelocity;
-                }
-            });
-
-            requestAnimationFrame(updateParticles);
-        }
-
-        updateParticles();
 
         // Greeting Script
         const time = new Date().getHours();
         let greeting;
         if (time < 10) {
-            greeting = "Good morning";
+            greeting = "Good morning";       
         } else if (time < 18) {
             greeting = "Good afternoon";
-        } else if (time > 13) {
+        } else if (time > 13) {            
             greeting = "Goodnight";
         } else {
             greeting = "Good evening";
@@ -209,7 +118,7 @@
             let s = today.getSeconds();
             let ampm = h >= 12 ? 'PM' : 'AM';
             h = h % 12;
-            h = h ? h : 12;
+            h = h ? h : 12; // the hour '0' should be '12'
             m = checkTime(m);
             s = checkTime(s);
             document.getElementById('txt').innerHTML = h + ":" + m + ":" + s + " " + ampm;
@@ -217,7 +126,7 @@
         }
 
         function checkTime(i) {
-            if (i < 10) {i = "0" + i};
+            if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
             return i;
         }
 
