@@ -108,20 +108,21 @@
             // Calculate mouse velocity
             const deltaX = mouseX - lastMouseX;
             const deltaY = mouseY - lastMouseY;
-            const timeDiff = currentTime - lastTime;
+            const timeDiff = currentTime - lastTime || 1; // Avoid division by zero
             const velocityX = deltaX / timeDiff;
             const velocityY = deltaY / timeDiff;
 
             particles.forEach(particle => {
-                const particleX = parseFloat(particle.style.left);
-                const particleY = parseFloat(particle.style.top);
+                const currentLeft = parseFloat(particle.style.left);
+                const currentTop = parseFloat(particle.style.top);
 
                 // Apply velocity to the particles based on mouse velocity
-                const offsetX = velocityX * 50; // Adjust multiplier to increase/decrease speed
-                const offsetY = velocityY * 50;
+                const offsetX = velocityX * 20; // Adjust multiplier to control effect strength
+                const offsetY = velocityY * 20;
 
-                // Move particles based on velocity
-                particle.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+                // Ensure particles stay within the container bounds
+                particle.style.left = `${Math.min(100, Math.max(0, currentLeft + offsetX))}%`;
+                particle.style.top = `${Math.min(100, Math.max(0, currentTop + offsetY))}%`;
             });
 
             // Update last mouse position and time
