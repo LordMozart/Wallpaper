@@ -37,10 +37,14 @@
         let greeting;
         if (time < 10) {
             greeting = "Good morning";
+        } else if (time < 12) {
+            greeting = "Evenening";            
         } else if (time < 18) {
             greeting = "Good afternoon";
-        } else if (time > 21) {
-            greeting = "Sleep well!";
+        } else if (time > 12) {
+            greeting = "Miday";
+        } else if (time < 13) {            
+            greeting = "Goodnight";
         } else {
             greeting = "Good evening";
         }
