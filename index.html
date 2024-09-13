@@ -73,7 +73,9 @@
     <script>
         const particles = [];
         const particleCount = 50;
-        const influenceRadius = 150;  // Radius of effect around the mouse
+        const influenceRadius = 150;
+        const randomMovementDelay = 500;  // Delay for random movement in milliseconds
+        const randomMovementVelocity = 0.2; // Velocity for random movement
 
         function createParticles() {
             const particlesContainer = document.getElementById('particles-js');
@@ -97,11 +99,22 @@
                     velocityY: Math.sin(radians) * velocity,
                     x: parseFloat(particle.style.left),
                     y: parseFloat(particle.style.top),
-                    angle: angle
+                    angle: angle,
+                    randomMovement: true // Flag to track if the particle should move randomly
                 });
 
                 particlesContainer.appendChild(particle);
             }
+
+            // Start random movement with delay
+            setTimeout(() => {
+                particles.forEach(particle => {
+                    if (particle.randomMovement) {
+                        particle.velocityX += randomMovementVelocity * (Math.random() - 0.5);
+                        particle.velocityY += randomMovementVelocity * (Math.random() - 0.5);
+                    }
+                });
+            }, randomMovementDelay);
         }
 
         createParticles();
@@ -131,6 +144,9 @@
                     const angleToMouse = Math.atan2(mouseY - particleY, mouseX - particleX);
                     particle.velocityX += Math.cos(angleToMouse) * velocityX * 0.1;
                     particle.velocityY += Math.sin(angleToMouse) * velocityY * 0.1;
+                    particle.randomMovement = false; // Disable random movement when affected by mouse
+                } else {
+                    particle.randomMovement = true; // Enable random movement when not affected by mouse
                 }
             });
 
@@ -155,6 +171,15 @@
                 // Apply friction to slow down velocity over time
                 particle.velocityX *= 0.98;
                 particle.velocityY *= 0.98;
+
+                // Apply random movement if not affected by the mouse
+                if (particle.randomMovement) {
+                    const randomAngle = Math.random() * (160 - 20) + 20;
+                    const randomRadians = randomAngle * (Math.PI / 180);
+                    const randomVelocity = 0.2 + Math.random() * 0.2;
+                    particle.velocityX += Math.cos(randomRadians) * randomVelocity;
+                    particle.velocityY += Math.sin(randomRadians) * randomVelocity;
+                }
             });
 
             requestAnimationFrame(updateParticles);
