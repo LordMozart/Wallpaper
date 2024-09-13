@@ -4,8 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Countdown Timer</title>
+
     <link rel="stylesheet" href="style.css" />
     <script src="script.js" defer></script>
+
     <style>
         body {
             display: flex;
@@ -19,6 +21,7 @@
             font-size: 2em;
             overflow: hidden;
         }
+
         .container {
             text-align: center;
             position: relative;
@@ -26,18 +29,21 @@
             width: 100%;
             z-index: 1;
         }
+
         #txt {
             position: absolute;
             bottom: 20%;
             left: 50%;
             transform: translateX(-50%);
         }
+
         #countdown {
             position: absolute;
             bottom: 10%;
             left: 50%;
             transform: translateX(-50%);
         }
+
         #particles-js {
             position: absolute;
             width: 100%;
@@ -46,6 +52,7 @@
             background-size: cover;
             z-index: 0;
         }
+
         .particle {
             position: absolute;
             border-radius: 50%;
@@ -79,10 +86,13 @@
                 particle.style.top = `${Math.random() * 100}%`;
                 particle.style.left = `${Math.random() * 100}%`;
 
+                const randomVelocityX = (Math.random() - 0.5) * 2;
+                const randomVelocityY = (Math.random() - 0.5) * 2;
+
                 particles.push({
                     element: particle,
-                    velocityX: 0,
-                    velocityY: 0,
+                    velocityX: randomVelocityX,
+                    velocityY: randomVelocityY,
                     x: parseFloat(particle.style.left),
                     y: parseFloat(particle.style.top)
                 });
@@ -93,7 +103,6 @@
 
         createParticles();
 
-        // Variables to track mouse velocity
         let lastMouseX = 0, lastMouseY = 0, lastTime = 0;
 
         document.addEventListener('mousemove', (e) => {
@@ -101,7 +110,6 @@
             const mouseY = e.clientY;
             const currentTime = Date.now();
 
-            // Calculate mouse velocity
             const deltaX = mouseX - lastMouseX;
             const deltaY = mouseY - lastMouseY;
             const timeDiff = currentTime - lastTime || 1;
@@ -109,7 +117,6 @@
             const velocityX = deltaX / timeDiff;
             const velocityY = deltaY / timeDiff;
 
-            // Apply velocity only to the closest particles within a certain radius
             particles.forEach(particle => {
                 const particleX = particle.element.offsetLeft;
                 const particleY = particle.element.offsetTop;
@@ -117,18 +124,16 @@
                 const distance = Math.sqrt(Math.pow(mouseX - particleX, 2) + Math.pow(mouseY - particleY, 2));
 
                 if (distance < influenceRadius) {
-                    particle.velocityX += velocityX * 0.5;  // Adjust strength
+                    particle.velocityX += velocityX * 0.5;
                     particle.velocityY += velocityY * 0.5;
                 }
             });
 
-            // Update last mouse position and time
             lastMouseX = mouseX;
             lastMouseY = mouseY;
             lastTime = currentTime;
         });
 
-        // Update particle positions based on their velocity
         function updateParticles() {
             particles.forEach(particle => {
                 const currentLeft = parseFloat(particle.element.style.left);
@@ -137,12 +142,12 @@
                 const newLeft = currentLeft + particle.velocityX;
                 const newTop = currentTop + particle.velocityY;
 
-                // Wrap particles around screen boundaries
+                // Update position and apply wrapping if particles go off-screen
                 particle.element.style.left = `${(newLeft + 100) % 100}%`;
                 particle.element.style.top = `${(newTop + 100) % 100}%`;
 
-                // Apply friction to gradually reduce velocity over time
-                particle.velocityX *= 0.98;  // Friction coefficient
+                // Apply friction to slow down velocity over time
+                particle.velocityX *= 0.98;
                 particle.velocityY *= 0.98;
             });
 
