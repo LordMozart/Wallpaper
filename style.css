@@ -1,3 +1,21 @@
+video {
+  object-fit: cover;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.viewport-header {
+  position: relative;
+  height: 50vh;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Potta+One&display=swap');
 
 * {
@@ -28,11 +46,6 @@ h1 {
     font-weight: bold;
     font-size: 6rem;
     line-height: 1;
-
-#Wallpaper {
-  position: fixed;
-  right: 0;
-  bottom: 0;
   min-width: 100%; 
   min-height: 100%;
 }
