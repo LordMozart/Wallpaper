@@ -8,8 +8,11 @@
         <link rel="stylesheet" href="style.css" />
         <script src="script.js" defer></script>
     </head>
-    
-<p id="demo"></p>
+<div class="container">
+  <img src="background.jpg" alt="background" style="width:100%;">
+  <div class="centered">Jake :)</div>
+
+    <p id="demo"></p>
 
 <script>
 const time = new Date().getHours();
@@ -26,11 +29,6 @@ document.getElementById("demo").innerHTML = greeting;
 
 </body>
 </html>
-
-<div class="container">
-  <img src="background.jpg" alt="background" style="width:100%;">
-  <div class="centered">Jake :)</div>
-</div>
 
 <script>
 function startTime() {
@@ -51,3 +49,4 @@ function checkTime(i) {
 </script>
 
 <p>Days till birthday: <time datetime="2024-09-29">:)</time>.</p>
+</div>
