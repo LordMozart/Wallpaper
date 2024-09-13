@@ -7,26 +7,29 @@
     <link rel="icon" type="image/x-icon" href="https://images.sftcdn.net/images/t_app-icon-m/p/459ac38a-96d0-11e6-b687-00163ed833e7/1317321988/internet-explorer-7-logo.png">
     <link rel="stylesheet" href="style.css" />
     <script src="script.js" defer></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: white; /* Set all text to white */
+            background-color: black; /* Optional: Set background to black for better contrast */
+        }
+        .container {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <p id="greeting"></p>
-    <p id="txt"></p>
-    <p id="date"></p>
-    <h2>Jake :)</h2>
+    <div class="container">
+        <p id="greeting"></p>
+        <p id="txt"></p>
+        <p id="date"></p>
+    </div>
 
     <script>
-        // Greeting Script
-        const time = new Date().getHours();
-        let greeting;
-        if (time < 10) {
-            greeting = "Good morning";
-        } else if (time < 18) {
-            greeting = "Good afternoon";
-        } else {
-            greeting = "Good evening";
-        }
-        document.getElementById("greeting").innerHTML = greeting;
-
         // Clock Script
         function startTime() {
             const today = new Date();
@@ -46,9 +49,21 @@
 
         startTime();
 
+        // Greeting Script
+        const time = new Date().getHours();
+        let greeting;
+        if (time < 10) {
+            greeting = "Good morning";
+        } else if (time < 18) {
+            greeting = "Good afternoon";
+        } else {
+            greeting = "Good evening";
+        }
+        document.getElementById("greeting").innerHTML = greeting;        
         // Date Script
         const d = new Date();
         document.getElementById("date").innerHTML = d;
     </script>
+        <h2>Jake :)</h2>    
 </body>
 </html>
