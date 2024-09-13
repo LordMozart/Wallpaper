@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Countdown Timer</title>
-    <link rel="icon" type="image/x-icon" href="https://images.sftcdn.net/images/t_app-icon-m/p/459ac38a-96d0-11e6-b687-00163ed833e7/1317321988/internet-explorer-7-logo.png">
     <style>
         body {
             display: flex;
@@ -63,9 +62,9 @@
     </div>
 
     <script>
-        // Particle Effect Script
         const particles = [];
         const particleCount = 50;
+        const influenceRadius = 150;  // Radius of effect around the mouse
 
         function createParticles() {
             const particlesContainer = document.getElementById('particles-js');
@@ -81,7 +80,9 @@
                 particles.push({
                     element: particle,
                     velocityX: 0,
-                    velocityY: 0
+                    velocityY: 0,
+                    x: parseFloat(particle.style.left),
+                    y: parseFloat(particle.style.top)
                 });
 
                 particlesContainer.appendChild(particle);
@@ -106,10 +107,17 @@
             const velocityX = deltaX / timeDiff;
             const velocityY = deltaY / timeDiff;
 
-            // Apply velocity to particles
+            // Apply velocity only to the closest particles within a certain radius
             particles.forEach(particle => {
-                particle.velocityX += velocityX * 0.5;  // Adjust strength
-                particle.velocityY += velocityY * 0.5;
+                const particleX = particle.element.offsetLeft;
+                const particleY = particle.element.offsetTop;
+
+                const distance = Math.sqrt(Math.pow(mouseX - particleX, 2) + Math.pow(mouseY - particleY, 2));
+
+                if (distance < influenceRadius) {
+                    particle.velocityX += velocityX * 0.5;  // Adjust strength
+                    particle.velocityY += velocityY * 0.5;
+                }
             });
 
             // Update last mouse position and time
