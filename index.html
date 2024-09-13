@@ -1,52 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Countdown Timer</title>
-        <link rel="icon" type="image/x-icon" href="https://images.sftcdn.net/images/t_app-icon-m/p/459ac38a-96d0-11e6-b687-00163ed833e7/1317321988/internet-explorer-7-logo.png">
-        <link rel="stylesheet" href="style.css" />
-        <script src="script.js" defer></script>
-    </head>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Countdown Timer</title>
+    <link rel="icon" type="image/x-icon" href="https://images.sftcdn.net/images/t_app-icon-m/p/459ac38a-96d0-11e6-b687-00163ed833e7/1317321988/internet-explorer-7-logo.png">
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <p id="greeting"></p>
+    <p id="txt"></p>
+    <p id="date"></p>
+    <h2>Jake :)</h2>
 
-    <p id="demo"></p>
+    <script>
+        // Greeting Script
+        const time = new Date().getHours();
+        let greeting;
+        if (time < 10) {
+            greeting = "Good morning";
+        } else if (time < 18) {
+            greeting = "Good afternoon";
+        } else {
+            greeting = "Good evening";
+        }
+        document.getElementById("greeting").innerHTML = greeting;
 
-<script>
-const time = new Date().getHours();
-let greeting;
-if (time < 10) {
-  greeting = "Good morning";
-} else if (time < 20) {
-  greeting = "Good evening";
-} else {
-  greeting = "Good evening";
-}
-document.getElementById("demo").innerHTML = greeting;
-</script>
+        // Clock Script
+        function startTime() {
+            const today = new Date();
+            let h = today.getHours();
+            let m = today.getMinutes();
+            let s = today.getSeconds();
+            m = checkTime(m);
+            s = checkTime(s);
+            document.getElementById('txt').innerHTML = h + ":" + m + ":" + s;
+            setTimeout(startTime, 1000);
+        }
 
+        function checkTime(i) {
+            if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+            return i;
+        }
+
+        startTime();
+
+        // Date Script
+        const d = new Date();
+        document.getElementById("date").innerHTML = d;
+    </script>
 </body>
-<h2>Jake :)</h2>
 </html>
-
-<script>
-function startTime() {
-  const today = new Date();
-  let h = today.getHours();
-  let m = today.getMinutes();
-  let s = today.getSeconds();
-  m = checkTime(m);
-  s = checkTime(s);
-  document.getElementById('txt').innerHTML =  h + ":" + m + ":" + s;
-  setTimeout(startTime, 1000);
-}
-
-function checkTime(i) {
-  if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
-  return i;
-}
-</script>
-
-<script>
-const d = new Date();
-document.getElementById("demo").innerHTML = d;
-</script>
