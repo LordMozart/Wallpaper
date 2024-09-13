@@ -10,6 +10,7 @@
 
     <style>
         body {
+            font-family: Arial, sans-serif;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -86,8 +87,8 @@
                 particle.style.top = `${Math.random() * 100}%`;
                 particle.style.left = `${Math.random() * 100}%`;
 
-                const randomVelocityX = (Math.random() - 0.5) * 2;
-                const randomVelocityY = (Math.random() - 0.5) * 2;
+                const randomVelocityX = (Math.random() - 0.5) * 1;
+                const randomVelocityY = (Math.random() - 0.5) * 1;
 
                 particles.push({
                     element: particle,
@@ -138,6 +139,10 @@
             particles.forEach(particle => {
                 const currentLeft = parseFloat(particle.element.style.left);
                 const currentTop = parseFloat(particle.element.style.top);
+
+                // Apply slight random movement (hover effect)
+                particle.velocityX += (Math.random() - 0.5) * 0.1;
+                particle.velocityY += (Math.random() - 0.5) * 0.1;
 
                 const newLeft = currentLeft + particle.velocityX;
                 const newTop = currentTop + particle.velocityY;
