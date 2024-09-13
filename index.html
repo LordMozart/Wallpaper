@@ -86,15 +86,18 @@
                 particle.style.top = `${Math.random() * 100}%`;
                 particle.style.left = `${Math.random() * 100}%`;
 
-                const randomVelocityX = (Math.random() - 0.5) * 0.5;
-                const randomVelocityY = (Math.random() - 0.5) * 0.5;
+                // Random initial direction within the angle range
+                const angle = Math.random() * (160 - 20) + 20;
+                const radians = angle * (Math.PI / 180);
+                const velocity = 0.5 + Math.random() * 0.5;  // Slight velocity
 
                 particles.push({
                     element: particle,
-                    velocityX: randomVelocityX,
-                    velocityY: randomVelocityY,
+                    velocityX: Math.cos(radians) * velocity,
+                    velocityY: Math.sin(radians) * velocity,
                     x: parseFloat(particle.style.left),
-                    y: parseFloat(particle.style.top)
+                    y: parseFloat(particle.style.top),
+                    angle: angle
                 });
 
                 particlesContainer.appendChild(particle);
@@ -124,8 +127,10 @@
                 const distance = Math.sqrt(Math.pow(mouseX - particleX, 2) + Math.pow(mouseY - particleY, 2));
 
                 if (distance < influenceRadius) {
-                    particle.velocityX += velocityX * 0.1;  // Less sensitivity
-                    particle.velocityY += velocityY * 0.1;  // Less sensitivity
+                    // Update velocity in the direction of the mouse movement
+                    const angleToMouse = Math.atan2(mouseY - particleY, mouseX - particleX);
+                    particle.velocityX += Math.cos(angleToMouse) * velocityX * 0.1;
+                    particle.velocityY += Math.sin(angleToMouse) * velocityY * 0.1;
                 }
             });
 
@@ -139,10 +144,7 @@
                 const currentLeft = parseFloat(particle.element.style.left);
                 const currentTop = parseFloat(particle.element.style.top);
 
-                // Apply slight random movement (slower hover effect)
-                particle.velocityX += (Math.random() - 0.5) * 0.05;
-                particle.velocityY += (Math.random() - 0.5) * 0.05;
-
+                // Update position based on velocity
                 const newLeft = currentLeft + particle.velocityX;
                 const newTop = currentTop + particle.velocityY;
 
