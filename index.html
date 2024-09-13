@@ -21,6 +21,15 @@
         }
         .container {
             text-align: center;
+            position: relative;
+            height: 100%;
+            width: 100%;
+        }
+        #countdown {
+            position: absolute;
+            bottom: 10%; /* Adjust this value to position the countdown higher or lower */
+            left: 50%;
+            transform: translateX(-50%);
         }
     </style>
 </head>
@@ -29,6 +38,7 @@
         <p id="greeting"></p>
         <h2>Jake :)</h2>
         <p id="txt"></p>
+        <p id="countdown"></p> <!-- Added countdown element -->
     </div>
 
     <script>
@@ -67,6 +77,30 @@
         }
 
         startTime();
+
+        // Countdown Script
+        function updateCountdown() {
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            let targetDate = new Date(`September 29, ${currentYear}`);
+
+            if (now > targetDate) {
+                targetDate = new Date(`September 29, ${currentYear + 1}`);
+            }
+
+            const distance = targetDate - now;
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('countdown').innerHTML = 
+                `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+            setTimeout(updateCountdown, 1000);
+        }
+
+        updateCountdown();
     </script>
 </body>
 </html>
