@@ -7,6 +7,12 @@ video {
   left: 0;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Potta+One&display=swap');
+
+* {
+    box-sizing: border-box;
+}
+
 .viewport-header {
   position: relative;
   height: 50vh;
@@ -14,12 +20,6 @@ video {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-@import url('https://fonts.googleapis.com/css2?family=Potta+One&display=swap');
-
-* {
-    box-sizing: border-box;
 }
 
 body {
