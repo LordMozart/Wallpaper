@@ -10,12 +10,14 @@
     <style>
         body {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
             color: white; /* Set all text to white */
             background-color: black; /* Optional: Set background to black for better contrast */
+            font-size: 2em; /* Enlarge text */
         }
         .container {
             text-align: center;
@@ -25,9 +27,8 @@
 <body>
     <div class="container">
         <p id="greeting"></p>
-        <p id="txt"></p>
-        <p id="date"></p>
         <h2>Jake :)</h2>
+        <p id="txt"></p>
     </div>
 
     <script>
@@ -61,7 +62,6 @@
         }
 
         startTime();
-
     </script>
 </body>
 </html>
