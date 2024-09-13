@@ -80,7 +80,7 @@
         // Particle Effect Script
         function createParticles() {
             const particlesContainer = document.getElementById('particles-js');
-            const numberOfParticles = 50; // Adjust the number of particles
+            const numberOfParticles = 50;
 
             for (let i = 0; i < numberOfParticles; i++) {
                 const particle = document.createElement('div');
@@ -96,22 +96,38 @@
 
         createParticles();
 
-        // Update particle positions based on mouse movement
+        // Variables to track mouse velocity
+        let lastMouseX = 0, lastMouseY = 0, lastTime = 0;
+
         document.addEventListener('mousemove', (e) => {
             const particles = document.querySelectorAll('.particle');
             const mouseX = e.clientX;
             const mouseY = e.clientY;
+            const currentTime = Date.now();
+
+            // Calculate mouse velocity
+            const deltaX = mouseX - lastMouseX;
+            const deltaY = mouseY - lastMouseY;
+            const timeDiff = currentTime - lastTime;
+            const velocityX = deltaX / timeDiff;
+            const velocityY = deltaY / timeDiff;
 
             particles.forEach(particle => {
                 const particleX = parseFloat(particle.style.left);
                 const particleY = parseFloat(particle.style.top);
 
-                // Calculate movement relative to the mouse cursor
-                const offsetX = (mouseX - window.innerWidth / 2) * 0.02;
-                const offsetY = (mouseY - window.innerHeight / 2) * 0.02;
+                // Apply velocity to the particles based on mouse velocity
+                const offsetX = velocityX * 50; // Adjust multiplier to increase/decrease speed
+                const offsetY = velocityY * 50;
 
+                // Move particles based on velocity
                 particle.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
             });
+
+            // Update last mouse position and time
+            lastMouseX = mouseX;
+            lastMouseY = mouseY;
+            lastTime = currentTime;
         });
 
         // Greeting Script
@@ -136,7 +152,7 @@
             let s = today.getSeconds();
             let ampm = h >= 12 ? 'PM' : 'AM';
             h = h % 12;
-            h = h ? h : 12; // the hour '0' should be '12'
+            h = h ? h : 12;
             m = checkTime(m);
             s = checkTime(s);
             document.getElementById('txt').innerHTML = h + ":" + m + ":" + s + " " + ampm;
