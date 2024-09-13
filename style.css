@@ -19,11 +19,11 @@ body {
     color: white;
 }
 
-h1 {
+h2 {
     font-weight: normal;
     font-size: 4rem;
     margin-top: 5rem;
-    color: white;
+    color: black;
 }
 
 .big-text {
