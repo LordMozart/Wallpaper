@@ -15,27 +15,27 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            color: white; /* Set all text to white */
-            background-color: black; /* Optional: Set background to black for better contrast */
-            font-size: 2em; /* Enlarge text */
-            overflow: hidden; /* Prevent scrollbars */
+            color: white;
+            background-color: black;
+            font-size: 2em;
+            overflow: hidden;
         }
         .container {
             text-align: center;
             position: relative;
             height: 100%;
             width: 100%;
-            z-index: 1; /* Ensure content is above particles */
+            z-index: 1;
         }
         #txt {
             position: absolute;
-            bottom: 20%; /* Adjust this value to position the clock higher or lower */
+            bottom: 20%;
             left: 50%;
             transform: translateX(-50%);
         }
         #countdown {
             position: absolute;
-            bottom: 10%; /* Adjust this value to position the countdown higher or lower */
+            bottom: 10%;
             left: 50%;
             transform: translateX(-50%);
         }
@@ -43,9 +43,9 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            background: url('background.jpg') no-repeat center center fixed; /* Keep original background image */
+            background: url('background.jpg') no-repeat center center fixed;
             background-size: cover;
-            z-index: 0; /* Ensure particles are behind other elements */
+            z-index: 0;
         }
         .particle {
             position: absolute;
@@ -68,19 +68,19 @@
     </style>
 </head>
 <body>
-    <div id="particles-js"></div> <!-- Added particle effect container -->
+    <div id="particles-js"></div>
     <div class="container">
         <p id="greeting"></p>
         <h2>Jake :)</h2>
         <p id="txt"></p>
-        <p id="countdown"></p> <!-- Added countdown element -->
+        <p id="countdown"></p>
     </div>
 
     <script>
         // Particle Effect Script
         function createParticles() {
             const particlesContainer = document.getElementById('particles-js');
-            const numberOfParticles = 50; // Adjust the number of particles
+            const numberOfParticles = 50;
 
             for (let i = 0; i < numberOfParticles; i++) {
                 const particle = document.createElement('div');
@@ -96,65 +96,49 @@
 
         createParticles();
 
+        // Mouse tracking and particle interaction
+        let mouseX = 0, mouseY = 0, mouseVX = 0, mouseVY = 0;
+        let lastMouseX = 0, lastMouseY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            mouseVX = mouseX - lastMouseX;
+            mouseVY = mouseY - lastMouseY;
+            lastMouseX = mouseX;
+            lastMouseY = mouseY;
+        });
+
+        function updateParticles() {
+            const particles = document.querySelectorAll('.particle');
+            particles.forEach(particle => {
+                const rect = particle.getBoundingClientRect();
+                const dx = rect.left + rect.width / 2 - mouseX;
+                const dy = rect.top + rect.height / 2 - mouseY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < 100) {
+                    particle.style.transform = `translate(${mouseVX * 2}px, ${mouseVY * 2}px)`;
+                } else {
+                    particle.style.transform = 'translate(0, 0)';
+                }
+            });
+            requestAnimationFrame(updateParticles);
+        }
+
+        updateParticles();
+
         // Greeting Script
         const time = new Date().getHours();
         let greeting;
         if (time < 10) {
-            greeting = "Good morning";       
+            greeting = "Good morning";
         } else if (time < 18) {
             greeting = "Good afternoon";
-        } else if (time > 13) {            
-            greeting = "Goodnight";
         } else {
             greeting = "Good evening";
         }
-        document.getElementById("greeting").innerHTML = greeting;
-
-        // Clock Script
-        function startTime() {
-            const today = new Date();
-            let h = today.getHours();
-            let m = today.getMinutes();
-            let s = today.getSeconds();
-            let ampm = h >= 12 ? 'PM' : 'AM';
-            h = h % 12;
-            h = h ? h : 12; // the hour '0' should be '12'
-            m = checkTime(m);
-            s = checkTime(s);
-            document.getElementById('txt').innerHTML = h + ":" + m + ":" + s + " " + ampm;
-            setTimeout(startTime, 1000);
-        }
-
-        function checkTime(i) {
-            if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
-            return i;
-        }
-
-        startTime();
-
-        // Countdown Script
-        function updateCountdown() {
-            const now = new Date();
-            const currentYear = now.getFullYear();
-            let targetDate = new Date(`September 29, ${currentYear}`);
-
-            if (now > targetDate) {
-                targetDate = new Date(`September 29, ${currentYear + 1}`);
-            }
-
-            const distance = targetDate - now;
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            document.getElementById('countdown').innerHTML = 
-                `${days}d ${hours}h ${minutes}m ${seconds}s`;
-
-            setTimeout(updateCountdown, 1000);
-        }
-
-        updateCountdown();
+        document.getElementById('greeting').innerText = greeting;
     </script>
 </body>
 </html>
