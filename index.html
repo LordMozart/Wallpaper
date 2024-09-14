@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Particle Effects</title>
+    <title>Countdown Timer</title>
     <link rel="icon" type="image/x-icon" href="https://images.sftcdn.net/images/t_app-icon-m/p/459ac38a-96d0-11e6-b687-00163ed833e7/1317321988/internet-explorer-7-logo.png">
-    <link rel="stylesheet" href="style.css" />
-    <script src="script.js" defer></script>
     <style>
         body {
             display: flex;
@@ -15,27 +13,27 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            color: white; /* Set all text to white */
-            background-color: black; /* Optional: Set background to black for better contrast */
-            font-size: 2em; /* Enlarge text */
-            overflow: hidden; /* Prevent scrollbars */
+            color: white;
+            background-color: black;
+            font-size: 2em;
+            overflow: hidden;
         }
         .container {
             text-align: center;
             position: relative;
             height: 100%;
             width: 100%;
-            z-index: 1; /* Ensure content is above particles */
+            z-index: 1;
         }
         #txt {
             position: absolute;
-            bottom: 20%; /* Adjust this value to position the clock higher or lower */
+            bottom: 20%;
             left: 50%;
             transform: translateX(-50%);
         }
         #countdown {
             position: absolute;
-            bottom: 10%; /* Adjust this value to position the countdown higher or lower */
+            bottom: 10%;
             left: 50%;
             transform: translateX(-50%);
         }
@@ -43,97 +41,103 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            background: url('background.jpg') no-repeat center center fixed; /* Keep original background image */
+            background: url('background.jpg') no-repeat center center fixed;
             background-size: cover;
-            z-index: 0; /* Ensure particles are behind other elements */
+            z-index: 0;
         }
         .particle {
             position: absolute;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.35);
             filter: blur(12px);
+            transition: transform 0.2s;
         }
     </style>
 </head>
 <body>
-    <div id="particles-js"></div> <!-- Added particle effect container -->
+    <div id="particles-js"></div>
     <div class="container">
         <p id="greeting"></p>
         <h2>Jake :)</h2>
         <p id="txt"></p>
-        <p id="countdown"></p> <!-- Added countdown element -->
+        <p id="countdown"></p>
     </div>
 
     <script>
-        // Particle Effect Script
         const particles = [];
-        const numParticles = 50;
-        let mouseX = 0;
-        let mouseY = 0;
-        let lastMouseX = 0;
-        let lastMouseY = 0;
-        let mouseVelocityX = 0;
-        let mouseVelocityY = 0;
+        let mouseX = 0, mouseY = 0, lastMouseX = 0, lastMouseY = 0, mouseVelocityX = 0, mouseVelocityY = 0;
 
+        // Create particles and store their initial positions
         function createParticles() {
             const particlesContainer = document.getElementById('particles-js');
-            for (let i = 0; i < numParticles; i++) {
+            const numberOfParticles = 50;
+
+            for (let i = 0; i < numberOfParticles; i++) {
                 const particle = document.createElement('div');
                 particle.classList.add('particle');
-                particle.style.width = `${Math.random() * 35 + 20}px`;
-                particle.style.height = particle.style.width;
-                particle.style.top = `${Math.random() * 100}%`;
-                particle.style.left = `${Math.random() * 100}%`;
+                const size = Math.random() * 35 + 20;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                const initialX = Math.random() * window.innerWidth;
+                const initialY = Math.random() * window.innerHeight;
+                particle.style.left = `${initialX}px`;
+                particle.style.top = `${initialY}px`;
                 particlesContainer.appendChild(particle);
+
                 particles.push({
                     element: particle,
-                    x: parseFloat(particle.style.left),
-                    y: parseFloat(particle.style.top),
+                    x: initialX,
+                    y: initialY,
                     dx: 0,
-                    dy: 0
+                    dy: 0,
+                    originalX: initialX,
+                    originalY: initialY
                 });
             }
         }
 
         createParticles();
 
+        // Update particle positions based on proximity to the mouse
         function updateParticles() {
             particles.forEach(particle => {
                 const dx = mouseX - particle.x;
                 const dy = mouseY - particle.y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
 
-                if (distance < 20) {
-                    const force = (20 - distance) / 20;
-                    particle.dx += (dx / distance) * force * mouseVelocityX;
-                    particle.dy += (dy / distance) * force * mouseVelocityY;
+                // If the particle is close to the mouse cursor, move it
+                if (distance < 150) {
+                    const force = (150 - distance) / 150;
+                    particle.dx += (dx / distance) * force * mouseVelocityX * 0.1;
+                    particle.dy += (dy / distance) * force * mouseVelocityY * 0.1;
                 } else {
-                    // Return to hovering state
-                    particle.dx *= 0.95; // Damping
-                    particle.dy *= 0.95; // Damping
+                    // Gradually return to original position
+                    particle.dx += (particle.originalX - particle.x) * 0.01;
+                    particle.dy += (particle.originalY - particle.y) * 0.01;
                 }
 
+                // Update particle position
                 particle.x += particle.dx;
                 particle.y += particle.dy;
 
-                // Update particle position
-                particle.element.style.left = `${particle.x}%`;
-                particle.element.style.top = `${particle.y}%`;
+                particle.element.style.left = `${particle.x}px`;
+                particle.element.style.top = `${particle.y}px`;
             });
         }
 
-        function updateMouseVelocity(event) {
+        // Capture mouse movements
+        function onMouseMove(event) {
             const currentMouseX = event.clientX;
             const currentMouseY = event.clientY;
             mouseVelocityX = currentMouseX - lastMouseX;
             mouseVelocityY = currentMouseY - lastMouseY;
             lastMouseX = currentMouseX;
             lastMouseY = currentMouseY;
-            mouseX = (currentMouseX / window.innerWidth) * 100;
-            mouseY = (currentMouseY / window.innerHeight) * 100;
+            mouseX = currentMouseX;
+            mouseY = currentMouseY;
         }
 
-        document.addEventListener('mousemove', updateMouseVelocity);
+        document.addEventListener('mousemove', onMouseMove);
 
         function animate() {
             updateParticles();
@@ -164,7 +168,7 @@
             let s = today.getSeconds();
             let ampm = h >= 12 ? 'PM' : 'AM';
             h = h % 12;
-            h = h ? h : 12; // the hour '0' should be '12'
+            h = h ? h : 12;
             m = checkTime(m);
             s = checkTime(s);
             document.getElementById('txt').innerHTML = h + ":" + m + ":" + s + " " + ampm;
@@ -172,7 +176,9 @@
         }
 
         function checkTime(i) {
-            if (i < 10) {i = "0" + i}; // add zero in front of numbers < 10
+            if (i < 10) {
+                i = "0" + i;
+            }
             return i;
         }
 
@@ -197,8 +203,10 @@
             document.getElementById('countdown').innerHTML =
                 `${days}d ${hours}h ${minutes}m ${seconds}s`;
 
-            setTimeout(updateCountdown, 1000);         }
+            setTimeout(updateCountdown, 1000);
+        }
 
-        updateCountdown();     </script>
-
-</body> </html>
+        updateCountdown();
+    </script>
+</body>
+</html>
