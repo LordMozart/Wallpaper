@@ -1,212 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Countdown Timer</title>
-    <link rel="icon" type="image/x-icon" href="https://images.sftcdn.net/images/t_app-icon-m/p/459ac38a-96d0-11e6-b687-00163ed833e7/1317321988/internet-explorer-7-logo.png">
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            color: white;
-            background-color: black;
-            font-size: 2em;
-            overflow: hidden;
-        }
-        .container {
-            text-align: center;
-            position: relative;
-            height: 100%;
-            width: 100%;
-            z-index: 1;
-        }
-        #txt {
-            position: absolute;
-            bottom: 20%;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        #countdown {
-            position: absolute;
-            bottom: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        #particles-js {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: url('background.jpg') no-repeat center center fixed;
-            background-size: cover;
-            z-index: 0;
-        }
-        .particle {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.35);
-            filter: blur(12px);
-            transition: transform 0.2s;
-        }
-    </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Countdown Timer</title>
+    <link rel="icon" type="image/x-icon" href="https://images.sftcdn.net/images/t_app-icon-m/p/459ac38a-96d0-11e6-b687-00163ed833e7/1317321988/internet-explorer-7-logo.png">
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: white; /* Set all text to white */
+            background-color: black; /* Optional: Set background to black for better contrast */
+            font-size: 2em; /* Enlarge text */
+            overflow: hidden; /* Prevent scrollbars */
+        }
+        .container {
+            text-align: center;
+            position: relative;
+            height: 100%;
+            width: 100%;
+            z-index: 1; /* Ensure content is above particles */
+        }
+        #txt {
+            position: absolute;
+            bottom: 20%; /* Adjust this value to position the clock higher or lower */
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        #countdown {
+            position: absolute;
+            bottom: 10%; /* Adjust this value to position the countdown higher or lower */
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('background.jpg') no-repeat center center fixed; /* Keep original background image */
+            background-size: cover;
+            z-index: 0; /* Ensure particles are behind other elements */
+        }
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.35);
+            filter: blur(12px);
+            animation: float 10s infinite;
+        }
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
 <body>
-    <div id="particles-js"></div>
-    <div class="container">
-        <p id="greeting"></p>
-        <h2>Jake :)</h2>
-        <p id="txt"></p>
-        <p id="countdown"></p>
-    </div>
+    <div id="particles-js"></div> <!-- Added particle effect container -->
+    <div class="container">
+        <p id="greeting"></p>
+        <h2>Jake :)</h2>
+        <p id="txt"></p>
+        <p id="countdown"></p> <!-- Added countdown element -->
+    </div>
 
-    <script>
-        const particles = [];
-        let mouseX = 0, mouseY = 0, lastMouseX = 0, lastMouseY = 0, mouseVelocityX = 0, mouseVelocityY = 0;
+    <script>
+        // Particle Effect Script
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles-js');
+            const numberOfParticles = 50; // Adjust the number of particles
 
-        // Create particles and store their initial positions
-        function createParticles() {
-            const particlesContainer = document.getElementById('particles-js');
-            const numberOfParticles = 50;
+            for (let i = 0; i < numberOfParticles; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.width = `${Math.random() * 35 + 20}px`;
+                particle.style.height = particle.style.width;
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.animationDuration = `${Math.random() * 5 + 5}s`;
+                particlesContainer.appendChild(particle);
+            }
+        }
 
-            for (let i = 0; i < numberOfParticles; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                const size = Math.random() * 35 + 20;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                const initialX = Math.random() * window.innerWidth;
-                const initialY = Math.random() * window.innerHeight;
-                particle.style.left = `${initialX}px`;
-                particle.style.top = `${initialY}px`;
-                particlesContainer.appendChild(particle);
+        createParticles();
 
-                particles.push({
-                    element: particle,
-                    x: initialX,
-                    y: initialY,
-                    dx: 0,
-                    dy: 0,
-                    originalX: initialX,
-                    originalY: initialY
-                });
-            }
-        }
+        // Greeting Script
+        const time = new Date().getHours();
+        let greeting;
+        if (time < 10) {
+            greeting = "Good morning";       
+        } else if (time < 18) {
+            greeting = "Good afternoon";
+        } else if (time > 13) {            
+            greeting = "Goodnight";
+        } else {
+            greeting = "Good evening";
+        }
+        document.getElementById("greeting").innerHTML = greeting;
 
-        createParticles();
+        // Clock Script
+        function startTime() {
+            const today = new Date();
+            let h = today.getHours();
+            let m = today.getMinutes();
+            let s = today.getSeconds();
+            let ampm = h >= 12 ? 'PM' : 'AM';
+            h = h % 12;
+            h = h ? h : 12; // the hour '0' should be '12'
+            m = checkTime(m);
+            s = checkTime(s);
+            document.getElementById('txt').innerHTML = h + ":" + m + ":" + s + " " + ampm;
+            setTimeout(startTime, 1000);
+        }
 
-        // Update particle positions based on proximity to the mouse
-        function updateParticles() {
-            particles.forEach(particle => {
-                const dx = mouseX - particle.x;
-                const dy = mouseY - particle.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
+        function checkTime(i) {
+            if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+            return i;
+        }
 
-                // If the particle is close to the mouse cursor, move it
-                if (distance < 150) {
-                    const force = (150 - distance) / 150;
-                    particle.dx += (dx / distance) * force * mouseVelocityX * 0.1;
-                    particle.dy += (dy / distance) * force * mouseVelocityY * 0.1;
-                } else {
-                    // Gradually return to original position
-                    particle.dx += (particle.originalX - particle.x) * 0.01;
-                    particle.dy += (particle.originalY - particle.y) * 0.01;
-                }
+        startTime();
 
-                // Update particle position
-                particle.x += particle.dx;
-                particle.y += particle.dy;
+        // Countdown Script
+        function updateCountdown() {
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            let targetDate = new Date(`September 29, ${currentYear}`);
 
-                particle.element.style.left = `${particle.x}px`;
-                particle.element.style.top = `${particle.y}px`;
-            });
-        }
+            if (now > targetDate) {
+                targetDate = new Date(`September 29, ${currentYear + 1}`);
+            }
 
-        // Capture mouse movements
-        function onMouseMove(event) {
-            const currentMouseX = event.clientX;
-            const currentMouseY = event.clientY;
-            mouseVelocityX = currentMouseX - lastMouseX;
-            mouseVelocityY = currentMouseY - lastMouseY;
-            lastMouseX = currentMouseX;
-            lastMouseY = currentMouseY;
-            mouseX = currentMouseX;
-            mouseY = currentMouseY;
-        }
+            const distance = targetDate - now;
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        document.addEventListener('mousemove', onMouseMove);
+            document.getElementById('countdown').innerHTML = 
+                `${days}d ${hours}h ${minutes}m ${seconds}s`;
 
-        function animate() {
-            updateParticles();
-            requestAnimationFrame(animate);
-        }
+            setTimeout(updateCountdown, 1000);
+        }
 
-        animate();
-
-        // Greeting Script
-        const time = new Date().getHours();
-        let greeting;
-        if (time < 10) {
-            greeting = "Good morning";
-        } else if (time < 18) {
-            greeting = "Good afternoon";
-        } else if (time > 13) {
-            greeting = "Goodnight";
-        } else {
-            greeting = "Good evening";
-        }
-        document.getElementById("greeting").innerHTML = greeting;
-
-        // Clock Script
-        function startTime() {
-            const today = new Date();
-            let h = today.getHours();
-            let m = today.getMinutes();
-            let s = today.getSeconds();
-            let ampm = h >= 12 ? 'PM' : 'AM';
-            h = h % 12;
-            h = h ? h : 12;
-            m = checkTime(m);
-            s = checkTime(s);
-            document.getElementById('txt').innerHTML = h + ":" + m + ":" + s + " " + ampm;
-            setTimeout(startTime, 1000);
-        }
-
-        function checkTime(i) {
-            if (i < 10) {
-                i = "0" + i;
-            }
-            return i;
-        }
-
-        startTime();
-
-        // Countdown Script
-        function updateCountdown() {
-            const now = new Date();
-            const currentYear = now.getFullYear();
-            let targetDate = new Date(`September 29, ${currentYear}`);
-
-            if (now > targetDate) {
-                targetDate = new Date(`September 29, ${currentYear + 1}`);
-            }
-
-            const distance = targetDate - now;
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            document.getElementById('countdown').innerHTML =
-                `${days}d ${hours}h ${minutes}m ${seconds}s`;
-
-            setTimeout(updateCountdown, 1000);
-        }
-
-        updateCountdown();
-    </script>
+        updateCountdown();
+    </script>
 </body>
 </html>
